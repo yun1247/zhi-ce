@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>职测 - 你的职业匹配助手</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <h1 class="logo">🧭 职测</h1>
+      <p class="subtitle">找到真正适合你的职业方向</p>
+    </header>
+
+    <!-- 步骤条 -->
+    <div class="step-bar">
+      <div class="step active" data-step="1">性格</div>
+      <div class="step" data-step="2">技能</div>
+      <div class="step" data-step="3">偏好</div>
+      <div class="step" data-step="4">结果</div>
+    </div>
+
+    <!-- Step 1: 性格测评 -->
+    <div class="page active" id="step1">
+      <div class="card">
+        <h2>🧠 你的性格类型</h2>
+        <p class="hint">每个人格的分数范围 1-5（1=完全不像，5=非常像）</p>
+        
+        <div class="form-group">
+          <label>🎨 艺术型 (A) — 有创造力、想象力、感性</label>
+          <input type="range" class="slider" id="traitA" min="1" max="5" value="3">
+          <span class="slider-value" id="traitA-val">3</span>
+        </div>
+
+        <div class="form-group">
+          <label>🔬 研究型 (I) — 爱思考、分析、独立探索</label>
+          <input type="range" class="slider" id="traitI" min="1" max="5" value="3">
+          <span class="slider-value" id="traitI-val">3</span>
+        </div>
+
+        <div class="form-group">
+          <label>🔧 现实型 (R) — 动手能力强、务实、有条理</label>
+          <input type="range" class="slider" id="traitR" min="1" max="5" value="3">
+          <span class="slider-value" id="traitR-val">3</span>
+        </div>
+
+        <div class="form-group">
+          <label>🤝 社会型 (S) — 乐于助人、善沟通、有耐心</label>
+          <input type="range" class="slider" id="traitS" min="1" max="5" value="3">
+          <span class="slider-value" id="traitS-val">3</span>
+        </div>
+
+        <div class="form-group">
+          <label>💼 企业型 (E) — 有领导力、爱冒险、善交际</label>
+          <input type="range" class="slider" id="traitE" min="1" max="5" value="3">
+          <span class="slider-value" id="traitE-val">3</span>
+        </div>
+
+        <div class="form-group">
+          <label>📋 常规型 (C) — 细致、有条理、服从规范</label>
+          <input type="range" class="slider" id="traitC" min="1" max="5" value="3">
+          <span class="slider-value" id="traitC-val">3</span>
+        </div>
+
+        <button class="btn" onclick="nextStep(2)">下一步 →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: 技能和兴趣 -->
+    <div class="page" id="step2">
+      <div class="card">
+        <h2>💻 你的技能与兴趣</h2>
+        
+        <div class="form-group">
+          <label>选择你感兴趣的领域（可多选）</label>
+          <div class="checkbox-group" id="interests">
+            <label class="checkbox"><input type="checkbox" value="编程"> 编程</label>
+            <label class="checkbox"><input type="checkbox" value="设计"> 设计/艺术</label>
+            <label class="checkbox"><input type="checkbox" value="写作"> 写作/表达</label>
+            <label class="checkbox"><input type="checkbox" value="数据"> 数据/分析</label>
+            <label class="checkbox"><input type="checkbox" value="与人打交道"> 与人打交道</label>
+            <label class="checkbox"><input type="checkbox" value="研究"> 研究/探索</label>
+            <label class="checkbox"><input type="checkbox" value="创造"> 创造/发明</label>
+            <label class="checkbox"><input type="checkbox" value="帮助他人"> 帮助他人</label>
+            <label class="checkbox"><input type="checkbox" value="商业"> 商业/管理</label>
+            <label class="checkbox"><input type="checkbox" value="教育"> 教育/教学</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>你的技能（可多选）</label>
+          <div class="checkbox-group" id="skills">
+            <label class="checkbox"><input type="checkbox" value="JavaScript"> JavaScript</label>
+            <label class="checkbox"><input type="checkbox" value="Python"> Python</label>
+            <label class="checkbox"><input type="checkbox" value="Java"> Java</label>
+            <label class="checkbox"><input type="checkbox" value="C++"> C/C++</label>
+            <label class="checkbox"><input type="checkbox" value="React/Vue"> React/Vue</label>
+            <label class="checkbox"><input type="checkbox" value="数据库"> 数据库/SQL</label>
+            <label class="checkbox"><input type="checkbox" value="Linux"> Linux/运维</label>
+            <label class="checkbox"><input type="checkbox" value="机器学习"> 机器学习</label>
+            <label class="checkbox"><input type="checkbox" value="UI/UX设计"> UI/UX设计</label>
+            <label class="checkbox"><input type="checkbox" value="写作能力"> 写作能力</label>
+            <label class="checkbox"><input type="checkbox" value="沟通能力"> 沟通/表达</label>
+            <label class="checkbox"><input type="checkbox" value="项目管理"> 项目管理</label>
+            <label class="checkbox"><input type="checkbox" value="数据分析"> 数据分析</label>
+            <label class="checkbox"><input type="checkbox" value="摄影/视频"> 摄影/视频</label>
+          </div>
+        </div>
+
+        <button class="btn" onclick="nextStep(3)">下一步 →</button>
+        <button class="btn btn-secondary" onclick="prevStep(1)">← 上一步</button>
+      </div>
+    </div>
+
+    <!-- Step 3: 工作偏好 -->
+    <div class="page" id="step3">
+      <div class="card">
+        <h2>⚙️ 你的工作偏好</h2>
+
+        <div class="form-group">
+          <label>你喜欢的工作方式</label>
+          <div class="checkbox-group" id="workstyle">
+            <label class="checkbox"><input type="checkbox" value="独立工作"> 独立工作</label>
+            <label class="checkbox"><input type="checkbox" value="团队协作"> 团队协作</label>
+            <label class="checkbox"><input type="checkbox" value="远程办公"> 远程办公</label>
+            <label class="checkbox"><input type="checkbox" value="结果导向"> 结果导向</label>
+            <label class="checkbox"><input type="checkbox" value="创意导向"> 创意导向</label>
+            <label class="checkbox"><input type="checkbox" value="规律作息"> 规律作息</label>
+            <label class="checkbox"><input type="checkbox" value="灵活时间"> 灵活时间</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>你的价值观（最看重的）</label>
+          <div class="checkbox-group" id="values">
+            <label class="checkbox"><input type="checkbox" value="高收入"> 高收入</label>
+            <label class="checkbox"><input type="checkbox" value="工作生活平衡"> 工作生活平衡</label>
+            <label class="checkbox"><input type="checkbox" value="稳定性"> 稳定性</label>
+            <label class="checkbox"><input type="checkbox" value="创造力"> 创造力</label>
+            <label class="checkbox"><input type="checkbox" value="技术深度"> 技术深度</label>
+            <label class="checkbox"><input type="checkbox" value="社会贡献"> 社会贡献</label>
+            <label class="checkbox"><input type="checkbox" value="自由"> 自由/自主</label>
+            <label class="checkbox"><input type="checkbox" value="影响力"> 影响力</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>你能接受的生活方式</label>
+          <div class="checkbox-group" id="lifestyle">
+            <label class="checkbox"><input type="checkbox" value="正常作息"> 正常作息</label>
+            <label class="checkbox"><input type="checkbox" value="偶尔加班"> 偶尔加班</label>
+            <label class="checkbox"><input type="checkbox" value="高强度"> 高强度/996</label>
+            <label class="checkbox"><input type="checkbox" value="弹性工作"> 弹性工作</label>
+            <label class="checkbox"><input type="checkbox" value="自由职业"> 自由职业</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>你的最高学历</label>
+          <select id="education">
+            <option value="不限">不限</option>
+            <option value="大专">大专</option>
+            <option value="本科" selected>本科</option>
+            <option value="硕士">硕士</option>
+            <option value="博士">博士</option>
+          </select>
+        </div>
+
+        <button class="btn" onclick="doMatch()">🔍 开始匹配</button>
+        <button class="btn btn-secondary" onclick="prevStep(2)">← 上一步</button>
+      </div>
+    </div>
+
+    <!-- Step 4: 结果 -->
+    <div class="page" id="step4">
+      <div class="card">
+        <h2>🎯 你的职业匹配结果</h2>
+        <div id="results-container"></div>
+        <button class="btn btn-secondary" onclick="restart()">🔄 重新测评</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>🧭 职测 · 开源职业匹配工具 · <a href="https://github.com/HKUDS/CLI-Anything">GitHub</a></p>
+  </footer>
+
+  <script src="data/careers.json"></script>
+  <script src="engine/matcher.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
