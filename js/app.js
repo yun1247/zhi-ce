@@ -651,20 +651,15 @@ function showResults(profile) {
     return;
   }
 
-  // 显示前 10 个
   const topN = filtered.slice(0, 10);
   
-  const scoreColors = {
-    high: "#22c55e",
-    mid: "#eab308",
-    low: "#94a3b8"
-  };
-
   topN.forEach((result, index) => {
     const c = result.career;
     const score = result.score;
-    const color = score >= 70 ? scoreColors.high : score >= 45 ? scoreColors.mid : scoreColors.low;
+    const emoji = c.emoji || "💼";
+    const color = c.color || "#6366f1";
     const tier = score >= 70 ? "🔥 高度匹配" : score >= 45 ? "💡 值得考虑" : "👀 了解一下";
+    const tierClass = score >= 70 ? "tier-high" : score >= 45 ? "tier-mid" : "tier-low";
 
     const dims = result.details;
     const dimBars = [
@@ -672,49 +667,66 @@ function showResults(profile) {
       { label: "兴趣", val: dims.interests },
       { label: "技能", val: dims.skills },
       { label: "工作方式", val: dims.workstyle },
-      { label: "生活方式", val: dims.lifestyle },
       { label: "价值观", val: dims.values }
     ].filter(d => d.val !== null);
 
+    // 知识学科匹配展示
+    const subjects = c.knowledge_subjects || [];
+    const userSkills = (profile.skills || []).map(s => s.toLowerCase());
+    const subjectHtml = subjects.map(sub => {
+      const isMatch = userSkills.some(s => sub.toLowerCase().includes(s) || s.includes(sub.toLowerCase()));
+      return `<span class="subject-tag ${isMatch ? 'subject-match' : ''}">${sub}</span>`;
+    }).join("");
+
     container.innerHTML += `
-      <div class="result-card" style="animation-delay: ${index * 0.05}s">
-        <div class="result-header">
-          <div class="result-rank">#${index + 1}</div>
-          <div class="result-info">
+      <div class="result-card" style="--card-color: ${color}; animation-delay: ${index * 0.08}s">
+        <div class="card-ribbon" style="background: ${color}"></div>
+        <div class="card-header">
+          <div class="card-emoji">${emoji}</div>
+          <div class="card-title-group">
             <h3>${c.name}</h3>
-            <span class="result-category">${c.category}</span>
-            <span class="result-tier">${tier}</span>
+            <span class="card-badge" style="background:${color}20;color:${color}">${c.category}</span>
           </div>
-          <div class="result-score" style="color: ${color}">
-            <div class="score-ring">
-              <svg width="80" height="80">
-                <circle cx="40" cy="40" r="34" fill="none" stroke="#e2e8f0" stroke-width="6"/>
-                <circle cx="40" cy="40" r="34" fill="none" stroke="${color}" stroke-width="6"
-                  stroke-dasharray="${2 * Math.PI * 34}"
-                  stroke-dashoffset="${2 * Math.PI * 34 * (1 - score / 100)}"
-                  transform="rotate(-90 40 40)"/>
-              </svg>
-              <span class="score-text">${score}%</span>
-            </div>
-          </div>
+          <div class="card-rank" style="color:${color}">#${index + 1}</div>
         </div>
-        <div class="result-body">
+        <div class="card-score-section">
+          <div class="card-score-ring" style="--score-color: ${color}">
+            <svg width="72" height="72" viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r="30" fill="none" stroke="#e8e8e8" stroke-width="5"/>
+              <circle class="score-arc" cx="36" cy="36" r="30" fill="none" stroke="${color}" stroke-width="5"
+                stroke-dasharray="188.5" stroke-dashoffset="${188.5 * (1 - score / 100)}"
+                transform="rotate(-90 36 36)"/>
+            </svg>
+            <span class="card-score-text" style="color:${color}">${score}%</span>
+          </div>
+          <div class="card-tier ${tierClass}">${tier}</div>
+        </div>
+        <div class="card-body">
           <div class="dim-bars">
             ${dimBars.map(d => `
               <div class="dim-bar-row">
                 <span class="dim-label">${d.label}</span>
                 <div class="dim-bar-track">
-                  <div class="dim-bar-fill" style="width: ${d.val}%"></div>
+                  <div class="dim-bar-fill" style="width: ${d.val}%;background:${color}"></div>
                 </div>
                 <span class="dim-val">${d.val}%</span>
               </div>
             `).join("")}
           </div>
-          <div class="result-details">
-            <p><strong>💰 薪资范围：</strong>${c.salary_range}</p>
-            <p><strong>📚 学历要求：</strong>${c.min_education}</p>
-            <p><strong>🏷️ 标签：</strong>${c.tags.map(t => `<span class="tag">${t}</span>`).join("")}</p>
-            <p><strong>📋 日常工作：</strong>${c.daily_activities.join(" · ")}</p>
+          
+          ${subjects.length > 0 ? `
+          <div class="subjects-section">
+            <p class="subjects-title">📖 对应学科/知识</p>
+            <div class="subjects-tags">${subjectHtml}</div>
+          </div>
+          ` : ""}
+          
+          <div class="card-details">
+            <p><strong>💰</strong> ${c.salary_range}</p>
+            <p><strong>📋</strong> ${c.daily_activities.slice(0, 3).join(" · ")}</p>
+            <div class="card-tags">
+              ${(c.tags || []).map(t => `<span class="tag" style="background:${color}15;color:${color};border:1px solid ${color}30">${t}</span>`).join("")}
+            </div>
           </div>
         </div>
       </div>
@@ -722,83 +734,9 @@ function showResults(profile) {
   });
 
   // 滚动到结果区域
-  container.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-
-// 自动保存所有表单数据到 sessionStorage
-let saveTimer = null;
-function showSaveHint() {
-  const el = document.getElementById('save-indicator');
-  if (!el) return;
-  el.style.opacity = '1';
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => { el.style.opacity = '0'; }, 1500);
-}
-function saveFormData() {
-  const data = collectUserProfile();
-  sessionStorage.setItem('zhiCeProfile', JSON.stringify(data));
-  
-  document.querySelectorAll(".slider").forEach(slider => {
-    sessionStorage.setItem(slider.id, slider.value);
-  });
-  
-  document.querySelectorAll("input[type=checkbox]").forEach(cb => {
-    sessionStorage.setItem('cb_' + cb.value, cb.checked);
-  });
-  
-  sessionStorage.setItem('education', document.getElementById('education').value);
-  showSaveHint();
-}
-
-// 恢复所有表单数据
-function restoreFormData() {
-  const saved = sessionStorage.getItem('zhiCeProfile');
-  if (!saved) return;
-  
-  try {
-    const data = JSON.parse(saved);
-    
-    if (data.personality) {
-      Object.entries(data.personality).forEach(([key, val]) => {
-        const slider = document.getElementById('trait' + key);
-        if (slider) {
-          slider.value = val;
-          const valEl = document.getElementById('trait' + key + '-val');
-          if (valEl) valEl.textContent = val;
-        }
-      });
-    }
-    
-    if (data.education) {
-      document.getElementById('education').value = data.education;
-    }
-    
-    document.querySelectorAll("input[type=checkbox]").forEach(cb => {
-      const saved2 = sessionStorage.getItem('cb_' + cb.value);
-      if (saved2 !== null) {
-        cb.checked = saved2 === 'true';
-      }
-    });
-  } catch(e) {
-    console.warn('Restore failed', e);
-  }
-}
-
-// 自动保存的事件绑定
-function bindAutoSave() {
-  document.querySelectorAll(".slider").forEach(slider => {
-    slider.addEventListener("input", function() {
-      document.getElementById(this.id + "-val").textContent = this.value;
-      saveFormData();
-    });
-  });
-  
-  document.querySelectorAll("input[type=checkbox]").forEach(cb => {
-    cb.addEventListener("change", saveFormData);
-  });
-  
-  document.getElementById('education').addEventListener('change', saveFormData);
+  setTimeout(() => {
+    container.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 100);
 }
 
 

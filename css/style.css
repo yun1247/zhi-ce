@@ -347,3 +347,269 @@ select:focus { border-color: #6366f1; }
   .result-header { flex-wrap: wrap; }
   .step { font-size: 12px; padding: 10px 4px; }
 }
+
+
+/* ===== 结果卡片全新样式 ===== */
+#results-container {
+  display: grid;
+  gap: 24px;
+  padding: 10px 0;
+}
+
+.result-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  position: relative;
+  animation: cardSlideUp 0.6s ease-out both;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.result-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+}
+
+@keyframes cardSlideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card-ribbon {
+  height: 4px;
+  width: 100%;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px 12px;
+}
+
+.card-emoji {
+  font-size: 40px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #f8fafc;
+  flex-shrink: 0;
+}
+
+.card-title-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title-group h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: #0f172a;
+}
+
+.card-badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.card-rank {
+  font-size: 32px;
+  font-weight: 800;
+  opacity: 0.2;
+  line-height: 1;
+}
+
+.card-score-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 24px 16px;
+}
+
+.card-score-ring {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+}
+
+.card-score-ring svg {
+  width: 72px;
+  height: 72px;
+}
+
+.score-arc {
+  animation: fillArc 1.2s ease-out forwards;
+  stroke-dashoffset: 188.5;
+}
+
+@keyframes fillArc {
+  to { stroke-dashoffset: var(--target-offset); }
+}
+
+.card-score-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.card-tier {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
+.tier-high {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.tier-mid {
+  background: #fef9c3;
+  color: #ca8a04;
+}
+
+.tier-low {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.card-body {
+  padding: 0 24px 20px;
+}
+
+.dim-bars {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.dim-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dim-label {
+  width: 56px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.dim-bar-track {
+  flex: 1;
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.dim-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  animation: barGrow 0.8s ease-out forwards;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+@keyframes barGrow {
+  to { transform: scaleX(1); }
+}
+
+.dim-val {
+  width: 32px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-align: right;
+}
+
+/* 知识学科标签 */
+.subjects-section {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.subjects-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.subjects-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.subject-tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: #e2e8f0;
+  color: #475569;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.subject-match {
+  background: #6366f120 !important;
+  color: #6366f1 !important;
+  font-weight: 700;
+}
+
+.subject-tag:hover {
+  transform: scale(1.05);
+}
+
+/* 卡片详情 */
+.card-details {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.8;
+}
+
+.card-details p {
+  margin: 4px 0;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.card-tags .tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+/* 旧样式隐藏兼容 */
+.result-card .result-header,
+.result-card .result-body .dim-bars:first-child,
+.result-card .result-score,
+.result-card .result-rank:not(.card-rank),
+.result-card .result-info,
+.result-card .result-details {
+  /* Keep old selectors for safety */
+}
