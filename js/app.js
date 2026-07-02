@@ -561,14 +561,19 @@ function initData() {
 initData();
 
 // 滑块实时显示值
-document.querySelectorAll(".slider").forEach(slider => {
-  slider.addEventListener("input", function() {
-    document.getElementById(this.id + "-val").textContent = this.value;
-  });
+bindAutoSave();
+
+document.addEventListener("DOMContentLoaded", function() {
+  restoreFormData();
 });
+
+if (document.readyState !== 'loading') {
+  restoreFormData();
+}
 
 // 步骤切换
 function nextStep(step) {
+  saveFormData();
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.getElementById("step" + step).classList.add("active");
   
@@ -719,6 +724,84 @@ function showResults(profile) {
   // 滚动到结果区域
   container.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+
+
+// 自动保存所有表单数据到 sessionStorage
+let saveTimer = null;
+function showSaveHint() {
+  const el = document.getElementById('save-indicator');
+  if (!el) return;
+  el.style.opacity = '1';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { el.style.opacity = '0'; }, 1500);
+}
+function saveFormData() {
+  const data = collectUserProfile();
+  sessionStorage.setItem('zhiCeProfile', JSON.stringify(data));
+  
+  document.querySelectorAll(".slider").forEach(slider => {
+    sessionStorage.setItem(slider.id, slider.value);
+  });
+  
+  document.querySelectorAll("input[type=checkbox]").forEach(cb => {
+    sessionStorage.setItem('cb_' + cb.value, cb.checked);
+  });
+  
+  sessionStorage.setItem('education', document.getElementById('education').value);
+  showSaveHint();
+}
+
+// 恢复所有表单数据
+function restoreFormData() {
+  const saved = sessionStorage.getItem('zhiCeProfile');
+  if (!saved) return;
+  
+  try {
+    const data = JSON.parse(saved);
+    
+    if (data.personality) {
+      Object.entries(data.personality).forEach(([key, val]) => {
+        const slider = document.getElementById('trait' + key);
+        if (slider) {
+          slider.value = val;
+          const valEl = document.getElementById('trait' + key + '-val');
+          if (valEl) valEl.textContent = val;
+        }
+      });
+    }
+    
+    if (data.education) {
+      document.getElementById('education').value = data.education;
+    }
+    
+    document.querySelectorAll("input[type=checkbox]").forEach(cb => {
+      const saved2 = sessionStorage.getItem('cb_' + cb.value);
+      if (saved2 !== null) {
+        cb.checked = saved2 === 'true';
+      }
+    });
+  } catch(e) {
+    console.warn('Restore failed', e);
+  }
+}
+
+// 自动保存的事件绑定
+function bindAutoSave() {
+  document.querySelectorAll(".slider").forEach(slider => {
+    slider.addEventListener("input", function() {
+      document.getElementById(this.id + "-val").textContent = this.value;
+      saveFormData();
+    });
+  });
+  
+  document.querySelectorAll("input[type=checkbox]").forEach(cb => {
+    cb.addEventListener("change", saveFormData);
+  });
+  
+  document.getElementById('education').addEventListener('change', saveFormData);
+}
+
+
 
 function restart() {
   // 重置所有滑块

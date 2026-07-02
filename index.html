@@ -15,10 +15,10 @@
 
     <!-- 步骤条 -->
     <div class="step-bar">
-      <div class="step active" data-step="1">性格</div>
-      <div class="step" data-step="2">技能</div>
-      <div class="step" data-step="3">偏好</div>
-      <div class="step" data-step="4">结果</div>
+      <div class="step active" data-step="1" onclick="nextStep(1)" style="cursor:pointer">性格</div>
+      <div class="step" data-step="2" onclick="nextStep(2)" style="cursor:pointer">技能</div>
+      <div class="step" data-step="3" onclick="nextStep(3)" style="cursor:pointer">偏好</div>
+      <div class="step" data-step="4" onclick="nextStep(4)" style="cursor:pointer">结果</div>
     </div>
 
     <!-- Step 1: 性格测评 -->
@@ -63,7 +63,7 @@
           <span class="slider-value" id="traitC-val">3</span>
         </div>
 
-        <button class="btn" onclick="nextStep(2)">下一步 →</button>
+        <button class="btn" onclick="nextStep(2)">下一步 → <small style="opacity:0.7;font-weight:normal">已自动保存</small></button>
       </div>
     </div>
 
@@ -108,7 +108,7 @@
           </div>
         </div>
 
-        <button class="btn" onclick="nextStep(3)">下一步 →</button>
+        <button class="btn" onclick="nextStep(3)">下一步 → <small style="opacity:0.7;font-weight:normal">已自动保存</small></button>
         <button class="btn btn-secondary" onclick="prevStep(1)">← 上一步</button>
       </div>
     </div>
@@ -184,7 +184,11 @@
 
   <footer class="footer">
     <p>🧭 职测 · 开源职业匹配工具 · <a href="https://github.com/yun1247/zhi-ce">GitHub</a></p>
-  </footer>
+  
+  <div id="save-indicator" style="position:fixed;bottom:20px;right:20px;background:#6366f1;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;opacity:0;transition:opacity 0.3s;box-shadow:0 2px 10px rgba(99,102,241,0.3);pointer-events:none;z-index:999;">
+    💾 已自动保存
+  </div>
+</footer>
 
   
   <script src="engine/matcher.js"></script>
